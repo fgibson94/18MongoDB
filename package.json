@@ -1,0 +1,28 @@
+{
+  "name": "18mongodb",
+  "version": "1.0.0",
+  "description": "Mongo DB web scraper for UNC Bootcamp",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fgibson94/18MongoDB.git"
+  },
+  "author": "F. Gibson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fgibson94/18MongoDB/issues"
+  },
+  "homepage": "https://github.com/fgibson94/18MongoDB#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.3",
+    "express-handlebars": "^3.0.0",
+    "handlebars": "^4.0.11",
+    "mongoose": "^5.0.11"
+  }
+}
