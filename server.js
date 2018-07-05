@@ -6,6 +6,12 @@ var request = require("request");
 // Initialize Express
 var app = express();
 
+
+// Use body-parser for handling form submissions
+app.use(bodyParser.urlencoded({ extended: true }));
+// Use express.static to serve the public folder as a static directory
+app.use(express.static("public"));
+
 //set hbs
 
 var exphbs = require("express-handlebars");
@@ -19,11 +25,6 @@ var cheerio = require("cheerio");
 var db = require("./models.1");
 
 var PORT = 3000;
-
-// Use body-parser for handling form submissions
-app.use(bodyParser.urlencoded({ extended: true }));
-// Use express.static to serve the public folder as a static directory
-app.use(express.static("public"));
 
 // Connect to the Mongo DB
 // If deployed, use the deployed database. Otherwise use the local mongoHeadlines database
@@ -79,7 +80,7 @@ app.get("/scrape", function (req, res) {
 
 })
 // Retrieve data from the db
-app.get("/article", function(req, res) {
+app.get("/articles", function(req, res) {
   db.Article.find({}, function(error, data) {
     // Throw any errors to the console
     if (error) {
@@ -108,19 +109,38 @@ app.get("/articles/:id", function(req, res) {
     });
 });
 
+// Route for saving/updating an Article's associated Note
+app.post("/articles/:id", function(req, res) {
+   // Create a new note and pass the req.body to the entry
+   db.Note.create(req.body)
+   .then(function(dbNote) {
+     // If a Note was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Note
+     // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
+     // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
+     return db.Article.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
+   })
+   .then(function(dbArticle) {
+     // If we were able to successfully update an Article, send it back to the client
+     res.json(dbArticle);
+   })
+   .catch(function(err) {
+     // If an error occurred, send it to the client
+     res.json(err);
+   });
+});
 
 
 // A GET route
 app.get("/", function (req, res) {
   //Home Page
-  // res.send("Hello");
-  db.Article.find({})
-    .then(article => {
-      res.json(article)
-    })
-    .catch(err => {
-      res.json(err)
-    })
+  res.render("index");
+  //db.Article.find({})
+    // .then(article => {
+    //   res.json(article)
+    // })
+    // .catch(err => {
+    //   res.json(err)
+    // })
 })
 
 // Start the server
