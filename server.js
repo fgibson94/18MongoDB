@@ -24,7 +24,8 @@ var cheerio = require("cheerio");
 // Require all models
 var db = require("./models.1");
 
-var PORT = 3000;
+var PORT = process.env.PORT || 8080;
+
 
 // Connect to the Mongo DB
 // If deployed, use the deployed database. Otherwise use the local mongoHeadlines database
