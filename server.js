@@ -28,12 +28,12 @@ var PORT = 3000;
 
 // Connect to the Mongo DB
 // If deployed, use the deployed database. Otherwise use the local mongoHeadlines database
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/mongoHeadlines";
 
 // Set mongoose to leverage built in JavaScript ES6 Promises
 // Connect to the Mongo DB
 mongoose.Promise = Promise;
-mongoose.connect("mongodb://localhost:27017/mongoHeadlines");
+mongoose.connect(MONGODB_URI);
 
 
 
@@ -141,6 +141,18 @@ app.get("/", function (req, res) {
     // .catch(err => {
     //   res.json(err)
     // })
+})
+
+app.get("/notes", function (req, res) {
+  //Home Page
+  // res.render("index");
+  db.Note.find({})
+    .then(article => {
+      res.json(article)
+    })
+    .catch(err => {
+      res.json(err)
+    })
 })
 
 // Start the server
